@@ -13,14 +13,14 @@ type (
 	}
 )
 
-func NewTransaction(sender string, recipient string, amount float64) *transaction {
+func NewTransaction(sender string, recipient string, amount float64) transaction {
 	t := transaction{
 		sender:    address(sender),
 		recipient: address(recipient),
 		amount:    money(amount),
 	}
 
-	return &t
+	return t
 }
 
 func (tx transaction) String() string {

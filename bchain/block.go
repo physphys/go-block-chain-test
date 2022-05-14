@@ -9,14 +9,14 @@ import (
 type (
 	block struct {
 		timestamp    time.Time
-		transactions []*transaction
+		transactions []transaction
 		previousHash [32]byte
 		hash         [32]byte
 		nonce        int
 	}
 )
 
-func NewBlock(timestamp time.Time, transactions []*transaction, previousHash [32]byte) *block {
+func NewBlock(timestamp time.Time, transactions []transaction, previousHash [32]byte) block {
 	b := block{
 		timestamp:    timestamp,
 		transactions: transactions,
@@ -25,7 +25,7 @@ func NewBlock(timestamp time.Time, transactions []*transaction, previousHash [32
 	}
 	b.hash = b.calcHash()
 
-	return &b
+	return b
 }
 
 func (b block) String() string {

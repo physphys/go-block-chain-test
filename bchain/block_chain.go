@@ -7,23 +7,25 @@ import (
 	"time"
 )
 
-type BlockChain struct {
-	blocks              []*block
-	pendingTransactions []*transaction
-	miningReward        money
-}
+type (
+	BlockChain struct {
+		blocks              []block
+		pendingTransactions []transaction
+		miningReward        money
+	}
+)
 
 func NewBlockChain() *BlockChain {
 	genesisBlock := NewBlock(
 		time.Now(),
-		make([]*transaction, 0),
+		make([]transaction, 10),
 		sha256.Sum256([]byte(fmt.Sprintf("00"))),
 	)
 	genesisBlock.mining()
 
 	return &BlockChain{
 		miningReward: money(12.5),
-		blocks:       []*block{genesisBlock},
+		blocks:       []block{genesisBlock},
 	}
 }
 
@@ -31,11 +33,11 @@ func (bc BlockChain) String() string {
 	return fmt.Sprintf("blocks: %s", bc.blocks)
 }
 
-func (bc BlockChain) getLastBlock() *block {
+func (bc BlockChain) getLastBlock() block {
 	return bc.blocks[len(bc.blocks)-1]
 }
 
-func (bc *BlockChain) AddTransaction(tx *transaction) {
+func (bc *BlockChain) AddTransaction(tx transaction) {
 	bc.pendingTransactions = append(bc.pendingTransactions, tx)
 }
 
@@ -48,7 +50,7 @@ func (bc *BlockChain) Mine(rewardAddress address) {
 	block.mining()
 	bc.blocks = append(bc.blocks, block)
 
-	bc.pendingTransactions = make([]*transaction, 0)
+	bc.pendingTransactions = make([]transaction, 0)
 
 	bc.AddTransaction(
 		NewTransaction(
@@ -98,5 +100,5 @@ func (bc BlockChain) GetBalanceOfAddress(a string) money {
 // private
 
 func (bc BlockChain) LastBlock() block {
-	return *bc.blocks[len(bc.blocks)-1]
+	return bc.blocks[len(bc.blocks)-1]
 }
