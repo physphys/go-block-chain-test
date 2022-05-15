@@ -6,32 +6,38 @@ import (
 )
 
 func main() {
-	bc := bchain.NewBlockChain()
-	bc.AddTransaction(
-		bchain.NewTransaction(
-			"Ken",
-			"Taro",
-			2,
-		),
-	)
-	bc.AddTransaction(
-		bchain.NewTransaction(
-			"Taro",
-			"Ken",
-			10,
-		),
-	)
+	c := bchain.NewChain()
 
-	bc.Mine("Ken")
-	bc.Mine("Ken")
-
-	isValid, err := bc.IsValid()
+	t, err := bchain.NewTransaction("Ken", "Taro", 2)
 	if err != nil {
 		fmt.Println(err)
-	}
-	fmt.Printf("Block Chain validation %t\n", isValid)
 
-	fmt.Printf("%+v\n", bc)
-	fmt.Printf("Ken balance: %f\n", bc.GetBalanceOfAddress("Ken"))
-	fmt.Printf("Taro balance: %f\n", bc.GetBalanceOfAddress("Taro"))
+		return
+	}
+	c.AddTransaction(t)
+
+	t, err = bchain.NewTransaction("Taro", "Ken", 10)
+	if err != nil {
+		fmt.Println(err)
+
+		return
+	}
+	c.AddTransaction(t)
+
+	if err := c.Mine("Ken"); err != nil {
+		return
+	}
+	if err := c.Mine("Ken"); err != nil {
+		return
+	}
+
+	if err := c.Validate(); err != nil {
+		fmt.Println(err)
+
+		return
+	}
+
+	fmt.Printf("%+v\n", c)
+	fmt.Printf("Ken balance: %f\n", c.GetBalanceOfAddress("Ken"))
+	fmt.Printf("Taro balance: %f\n", c.GetBalanceOfAddress("Taro"))
 }

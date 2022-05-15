@@ -3,24 +3,29 @@ package bchain
 import "fmt"
 
 type (
-	address string
-	money   float64
+	walletAddress string
+
+	transactions []transaction
 
 	transaction struct {
-		sender    address
-		recipient address
+		sender    walletAddress
+		recipient walletAddress
 		amount    money
 	}
 )
 
-func NewTransaction(sender string, recipient string, amount float64) transaction {
-	t := transaction{
-		sender:    address(sender),
-		recipient: address(recipient),
-		amount:    money(amount),
+func NewTransaction(sender string, recipient string, amount money) (transaction, error) {
+	if err := amount.validate(); err != nil {
+		return transaction{}, err
 	}
 
-	return t
+	t := transaction{
+		sender:    walletAddress(sender),
+		recipient: walletAddress(recipient),
+		amount:    amount,
+	}
+
+	return t, nil
 }
 
 func (tx transaction) String() string {
